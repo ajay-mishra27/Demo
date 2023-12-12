@@ -1,0 +1,21 @@
+{
+    "test":"test2",
+    "csv_delimiter":"|",
+    "stage_path":"D:\\project\\ajay\\files",
+    "max_drop_location":"D:\\project\\ajay\\files\\max\\in",
+    "max_success_location":"D:\\project\\ajay\\files\\max\\out",
+    "max_error_location":"D:\\project\\ajay\\files\\max\\error",
+    "max_archive_location":"D:\\project\\ajay\\files\\max\\archive",
+    "comp_val":"",
+    "config_1500":"02MAXXWIRET *",
+    "config_3100":"24432423 dfsd sfd",
+    "config_5000":"D",
+    "replace_common":"*",
+    "config_block1":"F01CDSFDFDXXXXXXX3422342344",
+    "mt103_drop_location":"D:\\project\\ajay\\files\\mt103\\in",
+    "mt103_success_location":"D:\\project\\ajay\\files\\mt103\\out",
+    "mt103_error_location":"D:\\project\\ajay\\files\\mt103\\error",
+    "mt103_archive_location":"D:\\project\\ajay\\files\\mt103\\archive"
+    
+
+}
