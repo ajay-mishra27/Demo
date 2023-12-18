@@ -1,7 +1,6 @@
 
-import data_enrich as data_enrich
 
-
+import utils.data_enrich as data_enrich
 #Checks both strings are equal or not
 def is_string_eq(input_string_1,input_string_2,is_casesenstive = False):
     is_empty ,input_string_1 = data_enrich.is_str_empty(input_string_1)

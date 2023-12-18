@@ -6,12 +6,14 @@ import datetime
 import pytz
 import os
 import shutil
+from data_enrichment_service import DataEnrichment
 
 class Demo103:
 
     def __init__(self):
         print("Initializing the class")
         self.comp_val = Config.properties.comp_val
+        self.dataEnrichment = DataEnrichment()
 
     def replace(self,temp_line,rep_key,rep_val):
         return temp_line.replace("<"+rep_key+">",str(rep_val))
@@ -72,7 +74,7 @@ class Demo103:
 
     
     
-    def procees_conversion(self):
+    def procees_conversion(self,input_json):
         inputFile = "D:\\project\\ajay\\files\\mt103filenew.xlsx"
         inputFile_dir = Config.properties.mt103_drop_location
         for inputFile in os.listdir(inputFile_dir):
@@ -90,7 +92,7 @@ class Demo103:
                 total_tra_count = df_input_tran.shape[0]
                 if total_tra_count <= 0:
                     raise("Please provide the data as we are seeing empty file.")
-
+                df_input_tran = self.dataEnrichment.perform_data_enrich_ment(df_input_tran,input_json)
                 print("Valid file came with data and started doing the conversion.")
                 self.get_mt103_trans_from_input(df_input_tran)
                 destFile = os.path.join(Config.properties.mt103_archive_location,os.path.basename(inputFile))

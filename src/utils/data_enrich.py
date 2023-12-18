@@ -25,16 +25,16 @@ def str_padding(input_string,max_length,is_left_padding_truncate = False,padding
     if is_padding_require == False:
         if len_diff > 0:
             if is_left_padding_truncate == True:
-                return True,input_string[len(input_string) - max_length:len(input_string)]
+                return input_string[len(input_string) - max_length:len(input_string)]
             else:
-                return True,input_string[0:max_length]
+                return input_string[0:max_length]
         else:
              if is_left_padding_truncate == True:
-                return True,((padding_value * (max_length - len(input_string))) + input_string)
+                return ((padding_value * (max_length - len(input_string))) + input_string)
              else:
-                return True,(input_string + (padding_value * (max_length - len(input_string))))
+                return (input_string + (padding_value * (max_length - len(input_string))))
     else:
-        return True,input_string
+        return input_string
     
 #This function used to trim based on left or right or full
 def str_trim(input_string,type = "full"):
@@ -52,7 +52,7 @@ def str_concat(input_string_1,input_string_2):
     is_empty,input_string_1 =  is_str_empty(input_string_1)
     is_empty,input_string_2 =  is_str_empty(input_string_2)
 
-    return input_string_1 + input_string_2
+    return input_string_1 +" "+ input_string_2
 
 #Get the sub string with start and end position
 def str_sub_strig(input_string,start_position,end_position):
@@ -74,7 +74,7 @@ def str_case_conversion(input_string,conversion = "lower"):
         return input_string.lower()
 
 #Mask the given string
-def str_mask(input_string,no_of_position_to_show = 4,replace_val="X",mask_on = "left"):
+def str_mask(input_string,replace_val="X",no_of_position_to_show = 4,mask_on = "left"):
     is_empty,input_string = is_str_empty(input_string)
     length  = len(input_string)
     if length == 0 or no_of_position_to_show >= length:
