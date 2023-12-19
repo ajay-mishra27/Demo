@@ -10,6 +10,7 @@ def is_str_empty(input_string):
 #return length difference and is max length
 def length_str(input_string,max_length):
     is_empty,input_string = is_str_empty(input_string)
+    print(type(max_length))
     if len(input_string) == max_length:
         return True,0
     else:
@@ -19,11 +20,11 @@ def length_str(input_string,max_length):
 def str_padding(input_string,max_length,is_left_padding_truncate = False,padding_value = "0"):
 
     is_empty,input_string =  is_str_empty(input_string)
-    
+    print(input_string)
     is_padding_require,len_diff = length_str(input_string,max_length)
-
+    len_diff = max_length - len(input_string)
     if is_padding_require == False:
-        if len_diff > 0:
+        if len_diff < 0:
             if is_left_padding_truncate == True:
                 return input_string[len(input_string) - max_length:len(input_string)]
             else:
@@ -47,12 +48,12 @@ def str_trim(input_string,type = "full"):
         return input_string.strip()
 
 #Concatenate two strings
-def str_concat(input_string_1,input_string_2):
+def str_concat(input_string_1,input_string_2,concat_val=" "):
     
     is_empty,input_string_1 =  is_str_empty(input_string_1)
     is_empty,input_string_2 =  is_str_empty(input_string_2)
 
-    return input_string_1 +" "+ input_string_2
+    return input_string_1 +concat_val+ input_string_2
 
 #Get the sub string with start and end position
 def str_sub_strig(input_string,start_position,end_position):

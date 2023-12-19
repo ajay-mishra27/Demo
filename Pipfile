@@ -7,6 +7,9 @@ name = "pypi"
 pandas = "*"
 openpyxl = "*"
 pytz = "*"
+mysql-connector-python = "*"
+pymysql = "*"
+pyodbc = "*"
 
 [dev-packages]
 

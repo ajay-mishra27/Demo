@@ -11,15 +11,13 @@ class DataEnrichment:
     def perform_action(self,action,each_json,action_count,each_tran):
         data_element_1 = ""
         data_element_2 = ""
-        action_parameter = ""
         parameter_length = 10
-        operator_1 = "" 
         data_mask_val = "0"
-        
+        direction_is_left = True
+        concat_val = " "
 
         if "data_element_"+str(action_count)+"_1" in each_json:
             data_element_1 = each_json["data_element_"+str(action_count)+"_1"]
-            action_parameter = data_element_1
             data_element_1 = each_tran[data_element_1]
             
         if "data_element_"+str(action_count)+"_2" in each_json and each_json["data_element_"+str(action_count)+"_2"] != None:
@@ -28,21 +26,21 @@ class DataEnrichment:
 
         if "action_parameter_"+str(action_count) in each_json:
             if each_json["action_parameter_"+str(action_count)] != None:
-                action_parameter = each_json["action_parameter_"+str(action_count)]    
-            
-        if "parameter_length_"+str(action_count) in each_json and each_json["parameter_length_"+str(action_count)] != None:
-            parameter_length = int(each_json["parameter_length_"+str(action_count)])
-
-        if "data_mask_val"+str(action_count) in each_json and each_json["data_mask_val"+str(action_count)] != None:
-            data_mask_val = int(each_json["data_mask_val"+str(action_count)])
-
+                action_parameter = each_json["action_parameter_"+str(action_count)]  
+                #val = lambda val : temp_val if val == "" else val  
+                direction_is_left = True if "direction" not in action_parameter else True if action_parameter['direction'] == 'left' else False
+                data_mask_val = "0" if "value_to_add" not in action_parameter else action_parameter['value_to_add']
+                parameter_length = 10 if "length" not in action_parameter else action_parameter['length']
+                concat_val =  " " if "concat_val" not in action_parameter else action_parameter['concat_val']
+        
         match action:
-            case "padding":
-                value = data_enrich.str_padding(data_element_1,parameter_length)
+            case "Padding":
+                value = data_enrich.str_padding(data_element_1,parameter_length,direction_is_left,data_mask_val)
+                print(value)
             case "trim":
                 value = data_enrich.str_trim(data_element_1)
-            case "concat":
-                value = data_enrich.str_concat(data_element_1,data_element_2)
+            case "Concatenation":
+                value = data_enrich.str_concat(data_element_1,data_element_2,concat_val)
             case "substring":
                 value = data_enrich.str_sub_strig(data_element_1,0,2)
             case "caseconversion":
@@ -53,7 +51,7 @@ class DataEnrichment:
                 value = data_enrich.type_conversion(data_element_1)
             case _:
                 raise(f"invalid action came {action}.")
-        each_tran[action_parameter] = value
+        each_tran[each_json["data_element_"+str(action_count)+"_1"]] = value
         return each_tran
             
     def perform_data_enrich(self,each_trans,json_arryay):
@@ -103,6 +101,7 @@ class DataEnrichment:
                     temp_val = self.perform_trans_action(action,each_json,action_count,each_trans)
                     val = lambda val : temp_val if val == "" else val
                     if opr_str != "":
+                        opr_str = opr_str.lower()
                         match opr_str:
                             case "and":
                                 val = val and temp_val
@@ -141,7 +140,7 @@ class DataEnrichment:
                 value,data_element = data_enrich.is_str_empty(data_element)
             case "is_not_empty":
                 value,data_element = data_enrich.is_str_empty(data_element)
-            case "equal":
+            case "Equal_to":
                 value = data_transform.is_string_eq(data_element,data_value)
             case "not_equal":
                 value = data_transform.is_string_eq(data_element,data_value)
