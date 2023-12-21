@@ -87,7 +87,7 @@ def str_mask(input_string,replace_val="X",no_of_position_to_show = 4,mask_on = "
         return  input_string[:no_of_position_to_show] + replace_val
 
 #type conversion from one to another
-def type_conversion(input,conversion="string"):
+def type_conversion(input,conversion="string",round=2):
 
     input_string = is_str_empty(input)
     if conversion == "string":
@@ -96,7 +96,7 @@ def type_conversion(input,conversion="string"):
         return int(input_string)
     elif conversion == "float" and input_string.replace(".","").isdigit():
         f = float(input_string)
-        return ":.2f".format(f)
+        return ":."+round+"f".format(f)
     else:
         raise(f"Not able to do conversion {input_string}")
 
