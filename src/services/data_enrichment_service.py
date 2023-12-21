@@ -11,6 +11,7 @@ class DataEnrichment:
     def perform_action(self,action,each_json,action_count,each_tran):
         data_element_1 = ""
         data_element_2 = ""
+        target_val = ""
         parameter_length = 10
         data_mask_val = "0"
         direction_is_left = True
@@ -18,11 +19,15 @@ class DataEnrichment:
 
         if "data_element_"+str(action_count)+"_1" in each_json:
             data_element_1 = each_json["data_element_"+str(action_count)+"_1"]
-            data_element_1 = each_tran[data_element_1]
+            target_val = data_element_1
+            data_element_1 = "" if data_element_1 not in each_tran else each_tran[data_element_1]
             
         if "data_element_"+str(action_count)+"_2" in each_json and each_json["data_element_"+str(action_count)+"_2"] != None:
             data_element_2 = each_json["data_element_"+str(action_count)+"_2"]
-            data_element_2 = each_tran[data_element_2]
+            data_element_2 = "" if data_element_2 not in each_tran else each_tran[data_element_2]
+
+        if "target_element_"+str(action_count) in each_json and each_json["target_element_"+str(action_count)] != None:
+            target_val = each_json["target_element_"+str(action_count)]
 
         if "action_parameter_"+str(action_count) in each_json:
             if each_json["action_parameter_"+str(action_count)] != None:
@@ -51,7 +56,7 @@ class DataEnrichment:
                 value = data_enrich.type_conversion(data_element_1)
             case _:
                 raise(f"invalid action came {action}.")
-        each_tran[each_json["data_element_"+str(action_count)+"_1"]] = value
+        each_tran[target_val] = value
         return each_tran
             
     def perform_data_enrich(self,each_trans,json_arryay):
@@ -128,11 +133,12 @@ class DataEnrichment:
 
         if "data_element_"+str(action_count)+"_1" in each_json:
             data_element = each_json["data_element_"+str(action_count)+"_1"]
-            data_element = each_tran[data_element]
+            data_element = "" if data_element not in each_tran else each_tran[data_element]
         
             
         if "value_"+str(action_count) in each_json:
             data_value = each_json["value_"+str(action_count)]
+            data_value = "" if data_value not in each_tran else each_tran[data_value]
 
 
         match action:
@@ -149,9 +155,9 @@ class DataEnrichment:
             case "not_starts_with":
                 value = data_transform.is_string_eq(data_element,data_value)    
             case "contains":
-                value = data_transform.is_string_eq(data_element,data_value)
+                value = data_transform.is_str_contains(data_element,data_value)
             case "not_contains":
-                value = data_transform.is_string_eq(data_element,data_value)
+                value = data_transform.is_str_contains(data_element,data_value)
             case "is_substring":
                 value = data_transform.is_string_eq(data_element,data_value)
             case "is_not_substring":

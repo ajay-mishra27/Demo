@@ -1,63 +1,19 @@
 import sys
 from services.data_enrichment_service import DataEnrichment  
-import pyodbc 
+from utils.sql_connection import SQLConnection
 import json
 
 if __name__ == "__main__":
     try:
         print("MT103 file Conversion started")
         process = DataEnrichment()
-        SERVER = 'velo23.czitegfubxle.us-east-1.rds.amazonaws.com' 
-        DATABASE = 'paymentProcessing'
-        USERNAME = 'admin'
-        PASSWORD = 'Admin123!'
-        connectionString = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
-        conn = pyodbc.connect(connectionString) 
-        
-        try:
-            cursor = conn.cursor()
-            cursor.execute("""
-                            SELECT TOP (10) [pipeline_config_id]
-                ,[pipeline_name]
-                ,[json_message]
-                ,[created_by]
-                ,[created_at]
-                ,[updated_by]
-                ,[updated_at]
-            FROM [paymentProcessing].[dbo].[t_pipeline_config] where pipeline_config_id=1
-            """)
-            columns = [column[0] for column in cursor.description]
-            result = cursor.fetchall()
-            cursor.execute("""
-                                    SELECT TOP (10) [id]
-                        ,[message]
-                        ,[created_at]
-                        ,[pipeline_config_id]
-                        ,[file_name]
-                    FROM [paymentProcessing].[dbo].[t_kafka_raw_dump]
-
-                    where pipeline_config_id=1
-            """)
-            columns1 = [column[0] for column in cursor.description]
-            result1 = cursor.fetchall()
-        finally:
-            conn.close()
-        input_json = []
-        results=[]
-        dataframes = []
-        dataframe = []
+        sql_class = SQLConnection()
+        sql_class.get_connection()
+        input_json = sql_class.get_pipeline_config()
+        dataframes = sql_class.get_kafka_messages()
         json_arryay_enrich = []
         json_arryay_transfarmeres = []
-        for row in result:
-            results.append(dict(zip(columns, row)))
-        for row in result1:
-            dataframe.append(dict(zip(columns1, row)))
-        for row in results:
-            input_json.append(json.loads(row['json_message']))
-        for row in dataframe:
-            dataframes.append(json.loads(row['message']))
         for each_json in input_json:
-            print(each_json["pipelineName"])
             configuration_json = each_json['config']['configuration']
             for each_config_json in configuration_json:
                 message_variants_json = each_config_json['source_kde']['Message_variants']
@@ -68,6 +24,7 @@ if __name__ == "__main__":
                             json_arryay_enrich.append(each_json)
                         for each_json in pipeline_operators_json['transformer']['rows']:
                             json_arryay_transfarmeres.append(each_json)
+        print(dataframes)
         dataframes = process.perform_data_enrichment(dataframes,json_arryay_enrich)
         print("Date after enrichment")
         print(dataframes)

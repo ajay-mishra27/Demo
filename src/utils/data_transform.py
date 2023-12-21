@@ -18,3 +18,10 @@ def str_start_with(input_string,start_with,is_casesenstive = False):
         start_with = data_enrich.str_case_conversion(start_with,"lower")
 
     return input_string.startswith(start_with)
+
+#String contains with    
+def is_str_contains(input_string,list):
+    is_empty ,input_string = data_enrich.is_str_empty(input_string)
+    return input_string in list
+
+
