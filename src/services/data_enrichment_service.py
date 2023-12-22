@@ -16,6 +16,7 @@ class DataEnrichment:
         data_mask_val = "0"
         direction_is_left = True
         concat_val = " "
+        round_off = 2
 
         if "data_element_"+str(action_count)+"_1" in each_json:
             data_element_1 = each_json["data_element_"+str(action_count)+"_1"]
@@ -37,7 +38,7 @@ class DataEnrichment:
                 data_mask_val = "0" if "value_to_add" not in action_parameter else action_parameter['value_to_add']
                 parameter_length = 10 if "length" not in action_parameter else action_parameter['length']
                 concat_val =  " " if "concat_val" not in action_parameter else action_parameter['concat_val']
-        
+                round_off = round_off if "round_off" not in action_parameter else action_parameter['round_off']
         match action:
             case "Padding":
                 value = data_enrich.str_padding(data_element_1,parameter_length,direction_is_left,data_mask_val)
@@ -52,6 +53,8 @@ class DataEnrichment:
                 value = data_enrich.str_case_conversion(each_tran)
             case "mask":
                 value = data_enrich.str_mask(data_element_1,data_mask_val)
+            case "Round Off":
+                value = data_enrich.type_conversion(data_element_1,"float",round_off)
             case "typeconversion":
                 value = data_enrich.type_conversion(data_element_1)
             case _:

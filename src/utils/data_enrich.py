@@ -88,15 +88,16 @@ def str_mask(input_string,replace_val="X",no_of_position_to_show = 4,mask_on = "
 
 #type conversion from one to another
 def type_conversion(input,conversion="string",round=2):
-
-    input_string = is_str_empty(input)
+    print(input)
+    isEmpty,input_string = is_str_empty(input)
+    print(input_string)
     if conversion == "string":
         return input_string
     elif conversion == "int" and input_string.replace(".","").isdigit():
         return int(input_string)
     elif conversion == "float" and input_string.replace(".","").isdigit():
         f = float(input_string)
-        return ":."+round+"f".format(f)
+        return format(f,f'.{round}f')
     else:
         raise(f"Not able to do conversion {input_string}")
 

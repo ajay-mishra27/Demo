@@ -18,10 +18,7 @@ def transform_enhance_data(row_id, simulation=False):
         for row in results:
             dataframes.append(json.loads(row['message']))
             pipeline_id = row['pipeline_config_id']
-
         
-        
-        print(dataframes)
         json_arryay_enrich = []
         json_arryay_transfarmeres = []
         
@@ -29,7 +26,9 @@ def transform_enhance_data(row_id, simulation=False):
             print(each_json["pipelineName"])
             configuration_json = each_json['config']['configuration']
             for each_config_json in configuration_json:
-                message_variants_json = each_config_json['source_kde']['Message_variants']
+                source_kdes_json = each_config_json['source_kde']
+                for source_kdes_each_json in source_kdes_json:
+                    message_variants_json = source_kdes_each_json['Message_variants']
                 for message_variants_each_json in message_variants_json:
                     pipeline_operators = message_variants_each_json['pipeline_operators']
                     for pipeline_operators_json in pipeline_operators:
@@ -37,6 +36,7 @@ def transform_enhance_data(row_id, simulation=False):
                             json_arryay_enrich.append(each_json)
                         for each_json in pipeline_operators_json['transformer']['rows']:
                             json_arryay_transfarmeres.append(each_json)
+        print(dataframes)
         dataframes = process.perform_data_enrichment(dataframes,json_arryay_enrich)
         print("Date after enrichment")
         print(dataframes)
@@ -58,5 +58,5 @@ def transform_enhance_data(row_id, simulation=False):
         raise(exp)
     
 if __name__ == "__main__":
-    transform_enhance_data(42)
+    transform_enhance_data(168)
     
