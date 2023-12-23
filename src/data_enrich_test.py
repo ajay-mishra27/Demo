@@ -29,26 +29,25 @@ def transform_enhance_data(row_id, simulation=False):
                 source_kdes_json = each_config_json['source_kde']
                 for source_kdes_each_json in source_kdes_json:
                     message_variants_json = source_kdes_each_json['Message_variants']
-                for message_variants_each_json in message_variants_json:
-                    pipeline_operators = message_variants_each_json['pipeline_operators']
-                    for pipeline_operators_json in pipeline_operators:
-                        for each_json in pipeline_operators_json['enricher']['rows']:
-                            json_arryay_enrich.append(each_json)
-                        for each_json in pipeline_operators_json['transformer']['rows']:
-                            json_arryay_transfarmeres.append(each_json)
-        print(dataframes)
-        dataframes = process.perform_data_enrichment(dataframes,json_arryay_enrich)
-        print("Date after enrichment")
-        print(dataframes)
-        dataframes = process.perform_data_transform(dataframes,json_arryay_transfarmeres)
-        print(dataframes)
-        dump_row_id = ""
-        for eachJson in dataframes:
-            query = f'insert into dbo.t_process_message_dump (id, message, process_status, pipeline_config_id) values (\'{row_id}\',\'{json.dumps(eachJson)}\',\'success\',\'{pipeline_id}\');'
-            dump_row_id = sqlConnection.execute_query(query)
-        # with open("test.txt",'w') as file:
-        #     json.dump(dataframes,file,ensure_ascii=False)
-        print(f"File Transformation Ended {dump_row_id}") 
+                    for message_variants_each_json in message_variants_json:
+                        pipeline_operators = message_variants_each_json['pipeline_operators']
+                        for pipeline_operators_json in pipeline_operators:
+                            for each_json in pipeline_operators_json['enricher']['rows']:
+                                json_arryay_enrich.append(each_json)
+                            for each_json in pipeline_operators_json['transformer']['rows']:
+                                json_arryay_transfarmeres.append(each_json)
+                        dataframes_new = process.perform_data_enrichment(dataframes,json_arryay_enrich)
+                        print("Date after enrichment")
+                        print(dataframes_new)
+                        dataframes_new = process.perform_data_transform(dataframes_new,json_arryay_transfarmeres)
+                        print(dataframes_new)
+                        dump_row_id = ""
+                        for eachJson in dataframes_new:
+                            query = f'insert into dbo.t_process_message_dump (id, message, process_status, pipeline_config_id) values (\'{row_id}\',\'{json.dumps(eachJson)}\',\'success\',\'{pipeline_id}\');'
+                            dump_row_id = sqlConnection.execute_query(query)
+                        # with open("test.txt",'w') as file:
+                        #     json.dump(dataframes,file,ensure_ascii=False)
+                        print(f"File Transformation Ended {dump_row_id}") 
         sqlConnection.close_db_connection()
         return(row_id)
         
@@ -58,5 +57,5 @@ def transform_enhance_data(row_id, simulation=False):
         raise(exp)
     
 if __name__ == "__main__":
-    transform_enhance_data(168)
+    transform_enhance_data(175)
     
